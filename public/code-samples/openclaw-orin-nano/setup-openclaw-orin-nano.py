@@ -25,6 +25,8 @@ YELLOW = "\033[93m"
 CYAN = "\033[96m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
+MODEL_ID = "gemma4:e2b"
+MODEL_NAME = "Gemma 4 E2B"
 
 
 def format_cmd(cmd):
@@ -220,7 +222,7 @@ def verify_tool_calling():
     )
 
     payload = {
-        "model": "qwen3.5:2b",
+        "model": MODEL_ID,
         "messages": [{"role": "user", "content": "What is the weather in Madrid?"}],
         "stream": False,
         "options": {"num_ctx": 16384},
@@ -279,7 +281,7 @@ def verify_tool_calling():
 def talk_to_agent():
     user_message = (
         "Hello OpenClaw. Introduce yourself in 3 short sentences. Mention that you "
-        "are running locally on a Jetson Orin Nano with Qwen 3.5 2B, and mention one "
+        f"are running locally on a Jetson Orin Nano with {MODEL_NAME}, and mention one "
         "thing you can do."
     )
     text_block("Prompt:", user_message)
@@ -341,7 +343,7 @@ def main():
     )
 
     narrate(
-        "Install Ollama, pull Qwen 3.5 2B, install OpenClaw, write config, start the gateway, and send one test message."
+        f"Install Ollama, pull {MODEL_NAME}, install OpenClaw, write config, start the gateway, and send one test message."
     )
     print()
 
@@ -427,21 +429,21 @@ def main():
 
     step(
         3,
-        "Download Qwen 3.5 2B",
-        "Pull Qwen 3.5 2B, a compact ~2B parameter model with solid tool calling.",
+        f"Download {MODEL_NAME}",
+        f"Pull {MODEL_NAME}, a compact edge-focused model with solid tool calling.",
     )
 
     models = run_output("ollama list 2>&1")
-    if "qwen3.5:2b" in models:
-        ok("qwen3.5:2b already downloaded. Skipping pull.")
+    if MODEL_ID in models:
+        ok(f"{MODEL_ID} already downloaded. Skipping pull.")
     else:
         narrate(
-            "Download size is about 2.7 GB. Loaded footprint is roughly 4.6 GB GPU memory."
+            "Download size depends on the selected Ollama tag. Expect the loaded footprint to stay within Orin Nano-friendly limits."
         )
-        run("ollama pull qwen3.5:2b")
+        run(f"ollama pull {MODEL_ID}")
         ok("Model downloaded")
 
-    model_row = find_model_row("qwen3.5:2b")
+    model_row = find_model_row(MODEL_ID)
     if model_row:
         print(f"  Ollama inventory: {model_row}")
 
@@ -495,8 +497,8 @@ def main():
                     "api": "ollama",
                     "models": [
                         {
-                            "id": "qwen3.5:2b",
-                            "name": "Qwen 3.5 2B",
+                            "id": MODEL_ID,
+                            "name": MODEL_NAME,
                             "contextWindow": 16384,
                         }
                     ],
@@ -520,7 +522,7 @@ def main():
     bullet("tools.profile = minimal reduces the attack surface and prompt overhead")
     bullet("gateway.mode = local keeps the endpoint bound to localhost")
 
-    run(['openclaw', 'models', 'set', 'ollama/qwen3.5:2b'])
+    run(["openclaw", "models", "set", f"ollama/{MODEL_ID}"])
     ok("Default model set")
 
     workspace_files = {
