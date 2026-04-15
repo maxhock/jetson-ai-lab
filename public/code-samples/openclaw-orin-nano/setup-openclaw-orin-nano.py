@@ -438,7 +438,7 @@ def main():
         ok(f"{MODEL_ID} already downloaded. Skipping pull.")
     else:
         narrate(
-            "Download size depends on the selected Ollama tag. Expect the loaded footprint to stay within Orin Nano-friendly limits."
+            "Download size is about 5 GB. Gemma 4 E2B is designed for 8 GB-class edge devices, so keep swap enabled for installs and the first warm load."
         )
         run(f"ollama pull {MODEL_ID}")
         ok("Model downloaded")
