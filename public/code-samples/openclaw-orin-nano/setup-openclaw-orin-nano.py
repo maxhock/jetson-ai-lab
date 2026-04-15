@@ -25,7 +25,7 @@ YELLOW = "\033[93m"
 CYAN = "\033[96m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
-MODEL_ID = "google/gemma-4-E2B-it"
+MODEL_ID = "gemma4:e2b"
 MODEL_NAME = "Gemma 4 E2B"
 
 
